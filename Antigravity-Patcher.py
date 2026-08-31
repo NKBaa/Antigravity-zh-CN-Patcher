@@ -5,6 +5,8 @@ import struct
 import subprocess
 import urllib.request
 import tempfile
+import zipfile
+import shutil
 
 import sys
 
@@ -16,7 +18,7 @@ UPDATE_API_URLS = [
 ]
 
 def check_and_restart_update():
-    """Check latest release through mirrors; replace script/executable and restart when newer."""
+    """Compare release versions, download the matching platform archive, then relaunch it."""
     if os.environ.get("ANTIGRAVITY_UPDATE_APPLIED") == "1":
         return False
     try:
@@ -33,16 +35,22 @@ def check_and_restart_update():
         latest = (release or {}).get("tag_name", "")
         if not latest or latest == PATCHER_VERSION:
             return False
-        asset = next((a for a in release.get("assets", []) if a.get("name", "").lower().endswith((".exe", ".py"))), None)
-        if not asset:
+        if sys.platform == "win32":
+            asset_name = "Windows-x64.zip"
+        elif sys.platform == "darwin":
+            asset_name = "macOS-arm64.zip" if os.uname().machine == "arm64" else "macOS-x86_64.zip"
+        else:
             return False
-        target = os.path.abspath(sys.argv[0])
+        asset = next((a for a in release.get("assets", []) if a.get("name") == asset_name), None)
+        if not asset:
+            print(f"[提示] 新版本缺少当前平台构建包：{asset_name}")
+            return False
         download_urls = [
             "https://ghfast.top/" + asset["browser_download_url"],
             "https://mirror.ghproxy.com/" + asset["browser_download_url"],
             asset["browser_download_url"],
         ]
-        fd, temp_path = tempfile.mkstemp(suffix=os.path.splitext(target)[1]); os.close(fd)
+        fd, temp_path = tempfile.mkstemp(suffix=".zip"); os.close(fd)
         for url in download_urls:
             try:
                 urllib.request.urlretrieve(url, temp_path)
@@ -52,8 +60,18 @@ def check_and_restart_update():
                 continue
         else:
             os.unlink(temp_path); return False
-        os.replace(temp_path, target)
+        update_dir = tempfile.mkdtemp(prefix="antigravity-update-")
+        with zipfile.ZipFile(temp_path) as archive:
+            archive.extractall(update_dir)
+        os.unlink(temp_path)
+        candidates = [name for name in os.listdir(update_dir) if name.lower().startswith("antigravity-patcher")]
+        if not candidates:
+            shutil.rmtree(update_dir, ignore_errors=True)
+            return False
+        target = os.path.join(update_dir, candidates[0])
         env = os.environ.copy(); env["ANTIGRAVITY_UPDATE_APPLIED"] = "1"
+        if not target.endswith(".py") and os.name == "nt":
+            target = os.path.abspath(target)
         subprocess.Popen([sys.executable, target] if target.endswith(".py") else [target], env=env,
                          close_fds=True, creationflags=getattr(subprocess, "DETACHED_PROCESS", 0))
         return True
@@ -620,6 +638,11 @@ DOM_TRANSLATOR_INJECTION = r"""
     if (!text || typeof text !== 'string') return text;
     let trimmed = text.trim();
     if (!trimmed) return text;
+
+    // Tooltips may render the label and shortcut as separate text nodes.
+    text = text.replace(/\bSelect\s+Environment\b/g, '选择环境');
+    text = text.replace(/\bSelect\s+Project\b/g, '选择项目');
+    trimmed = text.trim();
 
     if (dictionary[trimmed]) {
       return text.replace(trimmed, dictionary[trimmed]);
