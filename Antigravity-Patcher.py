@@ -3,8 +3,63 @@ import os
 import json
 import struct
 import subprocess
+import urllib.request
+import tempfile
 
 import sys
+
+PATCHER_VERSION = "v2.11.0-patcher.4"
+UPDATE_API_URLS = [
+    "https://ghfast.top/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
+    "https://mirror.ghproxy.com/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
+    "https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
+]
+
+def check_and_restart_update():
+    """Check latest release through mirrors; replace script/executable and restart when newer."""
+    if os.environ.get("ANTIGRAVITY_UPDATE_APPLIED") == "1":
+        return False
+    try:
+        release = None
+        for url in UPDATE_API_URLS:
+            try:
+                req = urllib.request.Request(url, headers={"User-Agent": "Antigravity-zh-CN-Patcher"})
+                with urllib.request.urlopen(req, timeout=8) as response:
+                    release = json.loads(response.read().decode("utf-8"))
+                if release.get("tag_name"):
+                    break
+            except Exception:
+                continue
+        latest = (release or {}).get("tag_name", "")
+        if not latest or latest == PATCHER_VERSION:
+            return False
+        asset = next((a for a in release.get("assets", []) if a.get("name", "").lower().endswith((".exe", ".py"))), None)
+        if not asset:
+            return False
+        target = os.path.abspath(sys.argv[0])
+        download_urls = [
+            "https://ghfast.top/" + asset["browser_download_url"],
+            "https://mirror.ghproxy.com/" + asset["browser_download_url"],
+            asset["browser_download_url"],
+        ]
+        fd, temp_path = tempfile.mkstemp(suffix=os.path.splitext(target)[1]); os.close(fd)
+        for url in download_urls:
+            try:
+                urllib.request.urlretrieve(url, temp_path)
+                if os.path.getsize(temp_path) > 1024:
+                    break
+            except Exception:
+                continue
+        else:
+            os.unlink(temp_path); return False
+        os.replace(temp_path, target)
+        env = os.environ.copy(); env["ANTIGRAVITY_UPDATE_APPLIED"] = "1"
+        subprocess.Popen([sys.executable, target] if target.endswith(".py") else [target], env=env,
+                         close_fds=True, creationflags=getattr(subprocess, "DETACHED_PROCESS", 0))
+        return True
+    except Exception as exc:
+        print(f"[提示] 检查更新失败，将继续运行当前版本：{exc}")
+        return False
 
 if sys.platform == "win32":
     APP_DIR = os.path.join(os.getenv('LOCALAPPDATA', ''), 'Programs', 'antigravity')
@@ -117,6 +172,7 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Local": "本地", "local": "本地", "Remote": "远程", "remote": "远程",
     "New Project": "新建项目", "No Project": "无项目", "Quick Start": "快速开始",
     "Project Settings": "项目设置", "Select Environment": "选择环境", "Select Environment (Ctrl+.)": "选择环境 (Ctrl+.)",
+    "Select Project": "选择项目", "Select Project Ctrl+;": "选择项目 Ctrl+;", "Select Project (Ctrl+;)": "选择项目 (Ctrl+;)",
     "Select branch": "选择分支", "Cloning GitHub Repository Locally": "正在本地克隆 GitHub 仓库",
     "Idle": "空闲", "Updated": "更新于", "Copy Project Name": "复制项目名称",
     "Select a folder.": "选择文件夹。", "Instantly create a new project and folder to start building.": "立即创建新项目和文件夹，开始构建。",
@@ -1033,7 +1089,11 @@ def apply_patch():
 
 if __name__ == "__main__":
     try:
+        if check_and_restart_update():
+            sys.exit(0)
         apply_patch()
+        # 汉化完成后不驻留后台，避免重复运行和文件占用。
+        sys.exit(0)
     except KeyboardInterrupt:
         print("\n\n[提示] 用户取消操作。")
     except Exception as e:
