@@ -27,6 +27,7 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Goals": "目标", "Tasks": "任务", "Artifacts": "工件", "Scratch": "草稿", "Chat": "对话",
     "Active": "进行中", "Inactive": "未激活", "Completed": "已完成", "Failed": "已失败",
     "History": "历史记录", "Settings": "设置", "System": "系统", "Network": "网络",
+    "Baseline model quota reached": "基础模型配额已用尽", "See Plans": "查看套餐", "Enable Overages": "启用超额使用",
     "Model": "模型", "Select Model": "选择模型", "select model": "选择模型",
     "Your quota for this model is running low.": "您对此模型的配额即将用尽。",
     "Your quota for this model is running low": "您对此模型的配额即将用尽",
@@ -41,6 +42,8 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Typeahead menu": "预输入菜单", "Group By": "分组方式", "Last Updated": "最后更新", "Last Prompt": "最新提示词", "Last prompt": "最新提示词",
     "Alphabetical (A-Z)": "字母顺序 (A-Z)", "Alphabetical (Z-A)": "字母倒序 (Z-A)", "Date Added": "添加日期", "Creation Date": "创建日期", "Created Date": "创建日期", "Subtitles": "副标题", "No Subtitle": "无副标题",
     "Filter": "筛选", "Scheduled": "已计划", "Environment": "环境", "None": "无", "Fast": "快速",
+    "Search conversations...": "搜索对话...", "Mark as Read": "标记为已读", "More Actions": "更多操作",
+    "Restore Conversation": "恢复对话", "Delete Permanently": "永久删除",
     "Last 7 days": "最近 7 天", "Last 24 hours": "最近 24 小时", "Last 30 days": "最近 30 天", "Last 3 months": "最近 3 个月",
     "Today": "今天", "Yesterday": "昨天", "This week": "本周", "This month": "本月", "All time": "全部时间",
     "Project": "项目", "project": "项目", "projects": "项目", "Conversation": "对话", "conversation": "对话",
@@ -94,6 +97,11 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Main Agent": "主智能体", "Add Context": "添加上下文",
     "Loading Antigravity": "正在加载 Antigravity", "Loading": "正在加载",
     "+ New Conversation": "+ 新建对话", "New Conversation": "新建对话", "Conversation History": "历史对话", "Scheduled Tasks": "计划任务",
+    "No scheduled tasks configured.": "尚未配置计划任务。", "Search tasks...": "搜索任务...",
+    "New Scheduled Task": "新建计划任务", "Name": "名称", "Enter scheduled task name...": "输入计划任务名称...",
+    "Schedule": "执行计划", "Hourly": "每小时", "Daily": "每天", "Weekly": "每周", "around": "约",
+    "Prompt": "提示词", "Enter a prompt for the agent to run...": "输入要让智能体执行的提示词...",
+    "All scheduled tasks run as Flash.": "所有计划任务均使用 Flash 模型运行。", "Add Scheduled Task": "添加计划任务",
     "No conversations yet": "暂无对话", "Open IDE": "打开 IDE", "Window": "窗口",
     "Review": "审阅", "Email": "电子邮箱", "Upgrade": "升级", "Not in Project": "未分组项目",
     "Ask anything, @ to mention, / for actions": "输入任何问题，使用 @ 提及，使用 / 执行操作",
@@ -101,6 +109,10 @@ DOM_TRANSLATOR_INJECTION = r"""
     "New Worktree": "新建工作区树", "New worktree": "新建工作区树",
     "Local": "本地", "local": "本地", "Remote": "远程", "remote": "远程",
     "New Project": "新建项目", "No Project": "无项目", "Quick Start": "快速开始",
+    "Project Settings": "项目设置", "Select Environment": "选择环境", "Select Environment (Ctrl+.)": "选择环境 (Ctrl+.)",
+    "Select branch": "选择分支", "Cloning GitHub Repository Locally": "正在本地克隆 GitHub 仓库",
+    "Idle": "空闲", "Updated": "更新于", "Copy Project Name": "复制项目名称",
+    "Select a folder.": "选择文件夹。", "Instantly create a new project and folder to start building.": "立即创建新项目和文件夹，开始构建。",
     "Good response": "好的回答", "Bad response": "差的回答",
     "Media": "媒体", "Mentions": "提及", "Actions": "操作",
     "Browser": "浏览器",
@@ -622,6 +634,12 @@ DOM_TRANSLATOR_INJECTION = r"""
     if ((m = trimmed.match(/^Models within this group:\s*(.+)$/i))) {
       return text.replace(trimmed, "此分组内的模型：" + m[1]);
     }
+    if ((m = trimmed.match(/^Updated\s+(.+)$/i))) {
+      return text.replace(trimmed, "更新于 " + m[1]);
+    }
+    if ((m = trimmed.match(/^(\d{1,2}:\d{2})\s*(AM|PM)$/i))) {
+      return text.replace(trimmed, (m[2].toUpperCase() === "AM" ? "上午 " : "下午 ") + m[1]);
+    }
     if ((m = trimmed.match(/^Last (\d+) days?$/i))) return text.replace(trimmed, "最近 " + m[1] + " 天");
     if ((m = trimmed.match(/^Last (\d+) hours?$/i))) return text.replace(trimmed, "最近 " + m[1] + " 小时");
     if ((m = trimmed.match(/^Last (\d+) months?$/i))) return text.replace(trimmed, "最近 " + m[1] + " 个月");
@@ -716,14 +734,47 @@ DOM_TRANSLATOR_INJECTION = r"""
     return text;
   }
 
+  const codeContentSelector = [
+    'pre', 'code', 'kbd', 'samp',
+    '.monaco-editor', '.monaco-diff-editor', '.view-lines', '.view-line',
+    '.CodeMirror', '.CodeMirror-code', '.cm-editor', '.cm-content', '.cm-line',
+    '.xterm', '.xterm-screen', '.xterm-rows',
+    '.diff-code', '.diff-code-content', '.diff-line', '.code-line', '.blob-code', '.blob-code-inner',
+    '[data-language]', '[data-code-line]', '[data-line-number]',
+    '[data-testid="code-line"]', '[data-testid="diff-line"]', '[role="code"]',
+    '[contenteditable="true"]', '[contenteditable="plaintext-only"]'
+  ].join(', ');
+
+  function isCodeContent(element) {
+    if (!element) return false;
+
+    if (element.closest && element.closest(codeContentSelector)) {
+      return true;
+    }
+
+    // Some diff viewers render source lines as plain div/span nodes without
+    // semantic class names. Treat only preformatted monospace text as code so
+    // normal interface labels using either style alone can still be translated.
+    try {
+      if (typeof window !== 'undefined' && window.getComputedStyle) {
+        const style = window.getComputedStyle(element);
+        const whiteSpace = (style.whiteSpace || '').toLowerCase();
+        const fontFamily = (style.fontFamily || '').toLowerCase();
+        const isPreformatted = whiteSpace === 'pre' || whiteSpace === 'pre-wrap' || whiteSpace === 'break-spaces';
+        const isMonospace = /monospace|consolas|menlo|monaco|courier|sfmono|roboto mono|jetbrains mono|source code pro/.test(fontFamily);
+        return isPreformatted && isMonospace;
+      }
+    } catch (e) {
+      // Ignore detached or inaccessible DOM nodes and continue translating UI.
+    }
+
+    return false;
+  }
+
   function processNode(node) {
     if (node.nodeType === Node.TEXT_NODE) {
-      // Avoid modifying code snippets or editor content
-      if (node.parentElement && node.parentElement.closest && node.parentElement.closest('pre, code, .monaco-editor')) {
-        return;
-      }
       const translated = translateText(node.textContent);
-      if (translated !== node.textContent) {
+      if (translated !== node.textContent && !isCodeContent(node.parentElement)) {
         node.textContent = translated;
       }
     } else if (node.nodeType === Node.ELEMENT_NODE) {
@@ -885,7 +936,7 @@ def apply_patch():
     print("==================================================================")
     print("                                                                ")
     print("              Antigravity v2.11.0 桌面端 一键汉化补丁               ")
-    print("Github 开源项目地址：https://github.com/MIMICTE/Antigravity-zh-CN")
+    print("Github 开源项目地址：https://github.com/NKBaa/Antigravity-zh-CN-Patcher")
     print("                                                                ")
     print("==================================================================")
     print("                                                                ")
@@ -975,6 +1026,6 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"\n[错误] 执行过程中出现异常: {e}")
         print("\n如果问题持续，请访问 GitHub 提交 Issue:")
-        print("https://github.com/MIMICTE/Antigravity-zh-CN/issues")
+        print("https://github.com/NKBaa/Antigravity-zh-CN-Patcher/issues")
         input("\n按任意键退出...")
         raise

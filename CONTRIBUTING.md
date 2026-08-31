@@ -8,7 +8,7 @@
 
 如果您发现了 bug 或有功能建议，请：
 
-1. 先搜索 [Issues](https://github.com/MIMICTE/Antigravity-zh-CN/issues) 确认问题是否已存在
+1. 先搜索 [Issues](https://github.com/NKBaa/Antigravity-zh-CN-Patcher/issues) 确认问题是否已存在
 2. 如果不存在，创建新的 Issue，并提供：
    - 清晰的问题描述
    - 复现步骤（如果是 bug）
@@ -82,4 +82,4 @@
 
 ## 问题？
 
-如有任何疑问，欢迎在 [Discussions](https://github.com/MIMICTE/Antigravity-zh-CN/discussions) 中讨论。
+如有任何疑问，欢迎在 [Discussions](https://github.com/NKBaa/Antigravity-zh-CN-Patcher/discussions) 中讨论。

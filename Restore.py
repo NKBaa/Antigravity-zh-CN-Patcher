@@ -19,11 +19,20 @@ ASAR_PATH = os.path.join(RESOURCES_DIR, "app.asar")
 DISABLED_PATH = ASAR_PATH + ".disabled"
 UNPACKED_APP_DIR = os.path.join(RESOURCES_DIR, "app")
 
+def get_stale_backup_path(disabled_path):
+    """Return a non-existing path for preserving an obsolete disabled ASAR."""
+    candidate = disabled_path + ".stale"
+    suffix = 1
+    while os.path.exists(candidate):
+        candidate = f"{disabled_path}.stale.{suffix}"
+        suffix += 1
+    return candidate
+
 def restore():
     print("==================================================================")
     print("                                                                ")
     print("             Antigravity v2.11.0 桌面端 纯净版还原工具              ")
-    print("Github 开源项目地址：https://github.com/MIMICTE/Antigravity-zh-CN")
+    print("Github 开源项目地址：https://github.com/NKBaa/Antigravity-zh-CN-Patcher")
     print("                                                                ")
     print("==================================================================")
     print("                                                                   ")
@@ -35,18 +44,21 @@ def restore():
 
     if os.path.exists(DISABLED_PATH):
         print("[执行] 找到已禁用的原始语言包: app.asar.disabled")
-        print("[执行] 正在恢复官方原版核心文件...")
         print("                                                                   ")
-        
-        if os.path.exists(ASAR_PATH):
-            try:
-                os.remove(ASAR_PATH)
-            except Exception as e:
-                print(f"[错误] 无法删除当前的 app.asar: {e}")
-                return
 
         try:
-            os.rename(DISABLED_PATH, ASAR_PATH)
+            if os.path.exists(ASAR_PATH):
+                # An updater may have installed a new official archive while the
+                # patch's old backup still exists. Never overwrite the current
+                # archive with a backup whose version cannot be verified.
+                stale_path = get_stale_backup_path(DISABLED_PATH)
+                print("[保护] 检测到当前 app.asar，将优先保留该官方文件。")
+                os.rename(DISABLED_PATH, stale_path)
+                print(f"[保护] 旧备份已归档为: {os.path.basename(stale_path)}")
+            else:
+                print("[执行] 正在恢复官方原版核心文件...")
+                os.rename(DISABLED_PATH, ASAR_PATH)
+
             if os.path.exists(UNPACKED_APP_DIR):
                 shutil.rmtree(UNPACKED_APP_DIR, ignore_errors=True)
             print("==================================================================")
@@ -70,8 +82,10 @@ def restore():
                     )
             elif sys.platform == "darwin":
                 subprocess.Popen(["open", APP_DIR])
+            return True
         except Exception as e:
             print(f"[错误] 恢复文件时出错: {e}")
+            return False
     else:
         if os.path.exists(UNPACKED_APP_DIR):
             print("[状态] 未发现已禁用的语言包 (app.asar.disabled)，但发现注入工作区。")
@@ -85,6 +99,7 @@ def restore():
             print("[状态] 软件当前已经是原版纯净状态。")
             print("                                                                   ")
             print("==================================================================")
+        return True
 
 if __name__ == "__main__":
     try:
@@ -94,6 +109,6 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"\n[错误] 执行过程中出现异常: {e}")
         print("\n如果问题持续，请访问 GitHub 提交 Issue:")
-        print("https://github.com/MIMICTE/Antigravity-zh-CN/issues")
+        print("https://github.com/NKBaa/Antigravity-zh-CN-Patcher/issues")
         input("\n按任意键退出...")
         raise

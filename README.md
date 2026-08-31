@@ -8,9 +8,11 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-lightgrey.svg)](#)
 
 </div>
+
+> 本仓库基于 [MIMICTE/Antigravity-zh-CN](https://github.com/MIMICTE/Antigravity-zh-CN) 持续维护，补充了新版界面翻译、代码内容保护和更安全的还原流程。
 
 ---
 
@@ -28,11 +30,18 @@
 - 🛡️ **纯净可逆** - 还原脚本可彻底抹除所有汉化残留，确保随时能"无损回滚"至纯血官方英文版
 - 🧭 **全动态跨平台寻址** - 智能识别系统架构，原生支持 Windows 及 macOS 环境下的路径寻址与进程管理
 
+## 🆕 本版更新（2026-08-31）
+
+- 补充配额提示、计划任务、项目设置、环境与分支选择等界面汉化
+- 保护代码编辑器、差异视图、终端及预格式化代码，避免源代码被翻译词典改写
+- 修复还原时新版 `app.asar` 被旧备份覆盖的问题；旧备份会安全归档为 `.stale` 文件
+- 提供可复现的 Windows PyInstaller 构建配置与 Release 可执行文件
+
 ## 📦 下载与安装
 
 ### 方式一：独立免安装版 (Windows / macOS) ⭐ 推荐普通用户
 
-**下载：** [前往 Release 下载对应系统版本](https://github.com/MIMICTE/Antigravity-zh-CN/releases/latest) (支持 Windows x64, macOS Intel/M芯片)
+**下载：** [前往 Release 下载对应系统版本](https://github.com/NKBaa/Antigravity-zh-CN-Patcher/releases/latest) (支持 Windows x64, macOS Intel/M芯片)
 
 **特点：**
 - ✅ 开箱即用，**无需安装 Python** 环境
@@ -57,14 +66,14 @@
 
 **克隆仓库：**
 ```bash
-git clone https://github.com/MIMICTE/Antigravity-zh-CN.git
-cd Antigravity-zh-CN
+git clone https://github.com/NKBaa/Antigravity-zh-CN-Patcher.git
+cd Antigravity-zh-CN-Patcher
 python Antigravity-Patcher.py
 ```
 
 **或下载源码压缩包：**
 
-从 [Releases 页面](https://github.com/MIMICTE/Antigravity-zh-CN/releases/latest) 下载 `Source code (zip)` 或 `Source code (tar.gz)`，解压后运行 `Antigravity-Patcher.py`。
+从 [Releases 页面](https://github.com/NKBaa/Antigravity-zh-CN-Patcher/releases/latest) 下载 `Source code (zip)` 或 `Source code (tar.gz)`，解压后运行 `Antigravity-Patcher.py`。
 
 ## 💡 技术原理
 
@@ -220,7 +229,7 @@ A: 编辑 `Antigravity-Patcher.py` 文件中的 `dictionary` 字典，添加键�
 <details>
 <summary><b>Q: 支持其他操作系统吗？</b></summary>
 
-A: 目前仅支持 Windows。macOS 和 Linux 版本的路径和机制不同，需要单独适配。
+A: 目前支持 Windows 和 macOS（Intel 与 Apple 芯片），Linux 暂不支持。
 </details>
 
 更多问题？欢迎在 [GitHub Issues](../../issues) 或 [Discussions](../../discussions) 中提问！

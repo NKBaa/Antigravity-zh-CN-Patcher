@@ -8,9 +8,11 @@ An open-source Chinese localization patch for Google Antigravity Desktop
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-lightgrey.svg)](#)
 
 </div>
+
+> This repository continues the work of [MIMICTE/Antigravity-zh-CN](https://github.com/MIMICTE/Antigravity-zh-CN), adding translations for newer UI, code-content protection, and a safer restore flow.
 
 ---
 
@@ -28,11 +30,18 @@ This project uses innovative **Web Injection and Native ASAR Unpacking Technolog
 - 🛡️ **Clean & Reversible** - Complete removal of localization with restore script, ensuring "lossless rollback" to official English version at any time
 - 🧭 **Cross-Platform Compatibility** - Automatically detects OS environment, natively supporting path resolution and process management on both Windows and macOS
 
+## 🆕 Updates (2026-08-31)
+
+- Added translations for quota prompts, scheduled tasks, project settings, environment selection, and branch selection
+- Protected code editors, diff views, terminals, and preformatted code from dictionary replacement
+- Fixed restore behavior that could overwrite a new `app.asar` with an obsolete backup; stale backups are now preserved as `.stale` files
+- Added reproducible Windows PyInstaller specifications and downloadable Release executables
+
 ## 📦 Download & Installation
 
 ### Option 1: Standalone Version (Windows / macOS) ⭐ Recommended for Most Users
 
-**Download:** [Download your OS version from Releases](https://github.com/MIMICTE/Antigravity-zh-CN/releases/latest) (Supports Windows x64, macOS Intel/Apple Silicon)
+**Download:** [Download your OS version from Releases](https://github.com/NKBaa/Antigravity-zh-CN-Patcher/releases/latest) (Supports Windows x64, macOS Intel/Apple Silicon)
 
 **Features:**
 - ✅ Ready to use, **no Python environment required**
@@ -57,14 +66,14 @@ This project uses innovative **Web Injection and Native ASAR Unpacking Technolog
 
 **Clone the repository:**
 ```bash
-git clone https://github.com/MIMICTE/Antigravity-zh-CN.git
-cd Antigravity-zh-CN
+git clone https://github.com/NKBaa/Antigravity-zh-CN-Patcher.git
+cd Antigravity-zh-CN-Patcher
 python Antigravity-Patcher.py
 ```
 
 **Or download source code archive:**
 
-Download `Source code (zip)` or `Source code (tar.gz)` from [Releases page](https://github.com/MIMICTE/Antigravity-zh-CN/releases/latest), extract and run `Antigravity-Patcher.py`.
+Download `Source code (zip)` or `Source code (tar.gz)` from [Releases page](https://github.com/NKBaa/Antigravity-zh-CN-Patcher/releases/latest), extract and run `Antigravity-Patcher.py`.
 
 ## 💡 Technical Approach
 
@@ -220,7 +229,7 @@ Then re-run the patch script.
 <details>
 <summary><b>Q: Does it support other operating systems?</b></summary>
 
-A: Currently Windows only. macOS and Linux versions have different paths and mechanisms that require separate adaptation.
+A: Windows and macOS (Intel and Apple Silicon) are supported. Linux is not currently supported.
 </details>
 
 More questions? Welcome to ask in [GitHub Issues](../../issues) or [Discussions](../../discussions)!
