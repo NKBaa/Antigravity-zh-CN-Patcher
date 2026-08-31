@@ -48,11 +48,11 @@
 - ✅ 原生级体验，一键执行，自动识别路径并重启
 
 **【Windows 用户使用方法】**
-1. 下载 `Windows-x64-exe.zip` 并解压
+1. 下载 `Windows-x64.zip` 并解压（压缩包内同时包含汉化与还原工具）
 2. 双击运行 `Antigravity-Patcher.exe` 开始汉化 (还原请双击 `Restore.exe`)
 
 **【macOS 用户使用方法】**
-1. 下载对应的 macOS 压缩包（`arm64`为M系列芯片，`x86_64`为Intel芯片）并解压
+1. 下载对应的 macOS 压缩包（`arm64` 为 M 系列芯片，`x86_64` 为 Intel 芯片；每个压缩包均包含汉化与还原工具）并解压
 2. 打开终端 (Terminal)，进入解压目录，赋予执行权限并运行：
    ```bash
    chmod +x Antigravity-Patcher-macOS-*

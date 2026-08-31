@@ -48,11 +48,11 @@ This project uses innovative **Web Injection and Native ASAR Unpacking Technolog
 - ✅ Native experience, one-click execution with automatic app restart
 
 **【For Windows Users】**
-1. Download `Windows-x64-exe.zip` and extract
+1. Download `Windows-x64.zip` and extract it (the archive contains both the patcher and restore tool)
 2. Double-click `Antigravity-Patcher.exe` to apply the patch (Use `Restore.exe` to revert)
 
 **【For macOS Users】**
-1. Download the corresponding macOS archive (`arm64` for M-series Apple Silicon, `x86_64` for Intel) and extract
+1. Download the corresponding macOS archive (`arm64` for M-series Apple Silicon, `x86_64` for Intel; each archive contains both the patcher and restore tool) and extract
 2. Open Terminal, navigate to the extracted folder, grant execution permissions and run:
    ```bash
    chmod +x Antigravity-Patcher-macOS-*

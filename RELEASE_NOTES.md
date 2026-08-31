@@ -13,18 +13,16 @@
 
 ## 下载
 
-- `Windows-x64-exe.zip`：包含汉化工具和还原工具，推荐 Windows 用户下载。
-- `macOS-arm64.zip`：适用于 Apple Silicon（M 系列芯片）。
-- `macOS-x86_64.zip`：适用于 Intel 芯片。
-- `Antigravity-Patcher.exe`：一键汉化工具。
-- `Restore.exe`：纯净版还原工具。
+- `Windows-x64.zip`：适用于 64 位 Windows，内含汉化工具与还原工具。
+- `macOS-arm64.zip`：适用于 Apple Silicon（M 系列芯片），内含汉化工具与还原工具。
+- `macOS-x86_64.zip`：适用于 Intel 芯片，内含汉化工具与还原工具。
 
 ## SHA-256
 
 ```text
 Antigravity-Patcher.exe  4E35FC41A47E9BA9459E933FEC344A8DDF7608F4CE50BC70975D794E0CA082B1
 Restore.exe              64A55D24441C94757CFA354BD7AF8169A83537E3DF0E9D4F600FCD636E39F36B
-Windows-x64-exe.zip      0B9C06A85CC5D27B3F78AA8D130D30BF14F7C1F875F631F0DC53783D82E9F36D
+Windows-x64.zip          0B9C06A85CC5D27B3F78AA8D130D30BF14F7C1F875F631F0DC53783D82E9F36D
 ```
 
 > Windows 可执行文件由 PyInstaller 构建，当前未进行数字签名，部分安全软件可能产生误报。
