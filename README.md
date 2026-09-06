@@ -43,6 +43,8 @@
 
 **下载：** [前往 Release 下载对应系统版本](https://github.com/NKBaa/Antigravity-zh-CN-Patcher/releases/latest) (支持 Windows x64, macOS Intel/M芯片)
 
+> Windows 发布文件正在申请通过 [SignPath.io](https://signpath.io/) 进行代码签名，证书由 [SignPath Foundation](https://signpath.org/) 提供。申请获批并接入构建流程后，Release 中将提供已签名的 Windows 可执行文件。
+
 **特点：**
 - ✅ 开箱即用，**无需安装 Python** 环境
 - ✅ 原生级体验，一键执行，自动识别路径并重启

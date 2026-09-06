@@ -43,6 +43,8 @@ This project uses innovative **Web Injection and Native ASAR Unpacking Technolog
 
 **Download:** [Download your OS version from Releases](https://github.com/NKBaa/Antigravity-zh-CN-Patcher/releases/latest) (Supports Windows x64, macOS Intel/Apple Silicon)
 
+> Code signing for Windows release artifacts is being requested through [SignPath.io](https://signpath.io/), with a certificate provided by the [SignPath Foundation](https://signpath.org/). Signed Windows executables will be published after approval and CI integration.
+
 **Features:**
 - ✅ Ready to use, **no Python environment required**
 - ✅ Native experience, one-click execution with automatic app restart
