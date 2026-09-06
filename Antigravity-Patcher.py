@@ -7,6 +7,7 @@ import urllib.request
 import tempfile
 import zipfile
 import shutil
+import time
 
 import sys
 
@@ -34,6 +35,24 @@ def download_with_progress(url, destination):
 
     urllib.request.urlretrieve(url, destination, reporthook=report)
     print(flush=True)
+
+
+def launch_updated_patcher(target, env):
+    command = [sys.executable, target] if target.endswith(".py") else [target]
+    flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0) if os.name == "nt" else 0
+    for attempt in range(1, 3):
+        process = subprocess.Popen(command, env=env, close_fds=True, creationflags=flags)
+        time.sleep(1.5)
+        exit_code = process.poll()
+        if exit_code is None or exit_code == 0:
+            return True
+        if exit_code in (-1073741502, 0xC0000142):
+            update_status(f"[更新] 新版本启动失败 (0xc0000142)，等待后重试 {attempt}/2...")
+            time.sleep(2)
+            continue
+        update_status(f"[更新] 新版本启动失败，退出代码：{exit_code}")
+        return False
+    return False
 
 
 def check_and_restart_update():
@@ -97,7 +116,15 @@ def check_and_restart_update():
             update_status("[更新] 新版本下载失败，将继续使用当前版本。")
             return False
         update_status("[更新] 下载完成，正在解压新版本...")
-        update_dir = tempfile.mkdtemp(prefix="antigravity-update-")
+        if sys.platform == "win32":
+            update_root = os.path.join(os.getenv("LOCALAPPDATA", tempfile.gettempdir()), "Antigravity-zh-CN-Patcher", "updates")
+        else:
+            update_root = os.path.expanduser("~/Library/Application Support/Antigravity-zh-CN-Patcher/updates")
+        version_dir = latest.replace("/", "_").replace("\\", "_")
+        update_dir = os.path.join(update_root, version_dir)
+        if os.path.isdir(update_dir):
+            shutil.rmtree(update_dir)
+        os.makedirs(update_dir, exist_ok=True)
         with zipfile.ZipFile(temp_path) as archive:
             archive.extractall(update_dir)
         os.unlink(temp_path)
@@ -110,10 +137,14 @@ def check_and_restart_update():
         env = os.environ.copy(); env["ANTIGRAVITY_UPDATE_APPLIED"] = "1"
         if not target.endswith(".py") and os.name == "nt":
             target = os.path.abspath(target)
-        subprocess.Popen([sys.executable, target] if target.endswith(".py") else [target], env=env,
-                         close_fds=True, creationflags=getattr(subprocess, "DETACHED_PROCESS", 0))
-        update_status("[更新] 新版本已启动，当前程序即将退出。")
-        return True
+        elif not target.endswith(".py"):
+            os.chmod(target, os.stat(target).st_mode | 0o111)
+        update_status(f"[更新] 正在从稳定目录启动新版本：{update_dir}")
+        if launch_updated_patcher(target, env):
+            update_status("[更新] 新版本已启动，当前程序即将退出。")
+            return True
+        update_status("[更新] 无法启动新版本，将继续使用当前版本执行汉化。")
+        return False
     except Exception as exc:
         update_status(f"[提示] 检查更新失败，将继续运行当前版本：{exc}")
         return False
