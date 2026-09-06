@@ -4,7 +4,6 @@ import json
 import struct
 import subprocess
 import urllib.request
-import tempfile
 import zipfile
 import shutil
 import time
@@ -20,6 +19,12 @@ UPDATE_API_URLS = [
 
 def update_status(message):
     print(message, flush=True)
+
+
+def program_directory():
+    if getattr(sys, "frozen", False):
+        return os.path.dirname(os.path.abspath(sys.executable))
+    return os.path.dirname(os.path.abspath(sys.argv[0]))
 
 
 def download_with_progress(url, destination):
@@ -101,45 +106,49 @@ def check_and_restart_update():
             "https://mirror.ghproxy.com/" + asset["browser_download_url"],
             asset["browser_download_url"],
         ]
-        fd, temp_path = tempfile.mkstemp(suffix=".zip"); os.close(fd)
+        version_dir = latest.replace("/", "_").replace("\\", "_")
+        base_dir = program_directory()
+        archive_path = os.path.join(base_dir, f"Antigravity-Patcher-{version_dir}.zip")
+        update_status(f"[更新] 新版本将保存到原程序目录：{base_dir}")
         for index, url in enumerate(download_urls, start=1):
             try:
                 update_status(f"[更新] 正在使用下载线路 {index}/{len(download_urls)}...")
-                download_with_progress(url, temp_path)
-                if os.path.getsize(temp_path) > 1024:
+                download_with_progress(url, archive_path)
+                if os.path.getsize(archive_path) > 1024:
                     break
             except Exception as exc:
                 update_status(f"[更新] 下载线路失败，正在切换：{exc}")
                 continue
         else:
-            os.unlink(temp_path)
+            if os.path.exists(archive_path):
+                os.unlink(archive_path)
             update_status("[更新] 新版本下载失败，将继续使用当前版本。")
             return False
         update_status("[更新] 下载完成，正在解压新版本...")
-        if sys.platform == "win32":
-            update_root = os.path.join(os.getenv("LOCALAPPDATA", tempfile.gettempdir()), "Antigravity-zh-CN-Patcher", "updates")
-        else:
-            update_root = os.path.expanduser("~/Library/Application Support/Antigravity-zh-CN-Patcher/updates")
-        version_dir = latest.replace("/", "_").replace("\\", "_")
-        update_dir = os.path.join(update_root, version_dir)
+        update_dir = os.path.join(base_dir, f".update-{version_dir}")
         if os.path.isdir(update_dir):
             shutil.rmtree(update_dir)
         os.makedirs(update_dir, exist_ok=True)
-        with zipfile.ZipFile(temp_path) as archive:
+        with zipfile.ZipFile(archive_path) as archive:
             archive.extractall(update_dir)
-        os.unlink(temp_path)
         candidates = [name for name in os.listdir(update_dir) if name.lower().startswith("antigravity-patcher")]
         if not candidates:
             shutil.rmtree(update_dir, ignore_errors=True)
             update_status("[更新] 压缩包中未找到汉化程序，将继续使用当前版本。")
             return False
-        target = os.path.join(update_dir, candidates[0])
+        source_target = os.path.join(update_dir, candidates[0])
+        extension = os.path.splitext(source_target)[1]
+        target = os.path.join(base_dir, f"Antigravity-Patcher-{version_dir}{extension}")
+        if os.path.exists(target):
+            os.unlink(target)
+        shutil.move(source_target, target)
+        shutil.rmtree(update_dir, ignore_errors=True)
         env = os.environ.copy(); env["ANTIGRAVITY_UPDATE_APPLIED"] = "1"
         if not target.endswith(".py") and os.name == "nt":
             target = os.path.abspath(target)
         elif not target.endswith(".py"):
             os.chmod(target, os.stat(target).st_mode | 0o111)
-        update_status(f"[更新] 正在从稳定目录启动新版本：{update_dir}")
+        update_status(f"[更新] 正在启动同目录中的新版本：{target}")
         if launch_updated_patcher(target, env):
             update_status("[更新] 新版本已启动，当前程序即将退出。")
             return True
