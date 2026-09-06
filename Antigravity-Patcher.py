@@ -975,6 +975,9 @@ DOM_TRANSLATOR_INJECTION = r"""
         node.style.fontSize = '14px';
         node.style.lineHeight = '20px';
         node.style.fontWeight = '400';
+        node.style.paddingLeft = '12px';
+        node.style.paddingTop = '6px';
+        node.style.paddingBottom = '6px';
         return;
       }
       if (node.placeholder) {
