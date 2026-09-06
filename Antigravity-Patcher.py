@@ -941,6 +941,9 @@ DOM_TRANSLATOR_INJECTION = r"""
       const combinedText = (node.textContent || '').replace(/\s+/g, ' ').trim();
       if (/^No Projects? found$/i.test(combinedText)) {
         node.textContent = '暂无项目';
+        node.style.fontSize = '14px';
+        node.style.lineHeight = '20px';
+        node.style.fontWeight = '400';
         return;
       }
       if (node.placeholder) {
