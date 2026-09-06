@@ -17,23 +17,54 @@ UPDATE_API_URLS = [
     "https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
 ]
 
+def update_status(message):
+    print(message, flush=True)
+
+
+def download_with_progress(url, destination):
+    last_percent = [-1]
+
+    def report(block_count, block_size, total_size):
+        if total_size <= 0:
+            return
+        percent = min(100, block_count * block_size * 100 // total_size)
+        if percent == 100 or percent >= last_percent[0] + 5:
+            print(f"\r[下载] {percent:3d}%", end="", flush=True)
+            last_percent[0] = percent
+
+    urllib.request.urlretrieve(url, destination, reporthook=report)
+    print(flush=True)
+
+
 def check_and_restart_update():
     """Compare release versions, download the matching platform archive, then relaunch it."""
+    update_status("============================================================")
+    update_status("[更新] 正在检查汉化工具版本...")
+    update_status(f"[更新] 当前版本：{PATCHER_VERSION}")
     if os.environ.get("ANTIGRAVITY_UPDATE_APPLIED") == "1":
+        update_status("[更新] 新版本已就绪，继续执行汉化。")
         return False
     try:
         release = None
-        for url in UPDATE_API_URLS:
+        for index, url in enumerate(UPDATE_API_URLS, start=1):
             try:
+                update_status(f"[更新] 正在连接更新线路 {index}/{len(UPDATE_API_URLS)}...")
                 req = urllib.request.Request(url, headers={"User-Agent": "Antigravity-zh-CN-Patcher"})
                 with urllib.request.urlopen(req, timeout=8) as response:
                     release = json.loads(response.read().decode("utf-8"))
                 if release.get("tag_name"):
+                    update_status("[更新] 已获取 GitHub 最新版本信息。")
                     break
-            except Exception:
+            except Exception as exc:
+                update_status(f"[更新] 当前线路不可用，正在切换：{exc}")
                 continue
         latest = (release or {}).get("tag_name", "")
-        if not latest or latest == PATCHER_VERSION:
+        if not latest:
+            update_status("[更新] 未能获取最新版本，将继续使用当前版本。")
+            return False
+        update_status(f"[更新] 最新版本：{latest}")
+        if latest == PATCHER_VERSION:
+            update_status("[更新] 当前已是最新版本，开始执行汉化。")
             return False
         if sys.platform == "win32":
             asset_name = "Windows-x64.zip"
@@ -43,23 +74,29 @@ def check_and_restart_update():
             return False
         asset = next((a for a in release.get("assets", []) if a.get("name") == asset_name), None)
         if not asset:
-            print(f"[提示] 新版本缺少当前平台构建包：{asset_name}")
+            update_status(f"[提示] 新版本缺少当前平台构建包：{asset_name}")
             return False
+        update_status(f"[更新] 发现新版本，准备下载：{asset_name}")
         download_urls = [
             "https://ghfast.top/" + asset["browser_download_url"],
             "https://mirror.ghproxy.com/" + asset["browser_download_url"],
             asset["browser_download_url"],
         ]
         fd, temp_path = tempfile.mkstemp(suffix=".zip"); os.close(fd)
-        for url in download_urls:
+        for index, url in enumerate(download_urls, start=1):
             try:
-                urllib.request.urlretrieve(url, temp_path)
+                update_status(f"[更新] 正在使用下载线路 {index}/{len(download_urls)}...")
+                download_with_progress(url, temp_path)
                 if os.path.getsize(temp_path) > 1024:
                     break
-            except Exception:
+            except Exception as exc:
+                update_status(f"[更新] 下载线路失败，正在切换：{exc}")
                 continue
         else:
-            os.unlink(temp_path); return False
+            os.unlink(temp_path)
+            update_status("[更新] 新版本下载失败，将继续使用当前版本。")
+            return False
+        update_status("[更新] 下载完成，正在解压新版本...")
         update_dir = tempfile.mkdtemp(prefix="antigravity-update-")
         with zipfile.ZipFile(temp_path) as archive:
             archive.extractall(update_dir)
@@ -67,6 +104,7 @@ def check_and_restart_update():
         candidates = [name for name in os.listdir(update_dir) if name.lower().startswith("antigravity-patcher")]
         if not candidates:
             shutil.rmtree(update_dir, ignore_errors=True)
+            update_status("[更新] 压缩包中未找到汉化程序，将继续使用当前版本。")
             return False
         target = os.path.join(update_dir, candidates[0])
         env = os.environ.copy(); env["ANTIGRAVITY_UPDATE_APPLIED"] = "1"
@@ -74,9 +112,10 @@ def check_and_restart_update():
             target = os.path.abspath(target)
         subprocess.Popen([sys.executable, target] if target.endswith(".py") else [target], env=env,
                          close_fds=True, creationflags=getattr(subprocess, "DETACHED_PROCESS", 0))
+        update_status("[更新] 新版本已启动，当前程序即将退出。")
         return True
     except Exception as exc:
-        print(f"[提示] 检查更新失败，将继续运行当前版本：{exc}")
+        update_status(f"[提示] 检查更新失败，将继续运行当前版本：{exc}")
         return False
 
 if sys.platform == "win32":
