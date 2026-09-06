@@ -189,7 +189,8 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Status": "状态", "Sort Conversations": "对话排序", "Worktree": "工作区树", "Worktrees": "工作区树", "worktree": "工作区树",
     "New Worktree": "新建工作区树", "New worktree": "新建工作区树",
     "Local": "本地", "local": "本地", "Remote": "远程", "remote": "远程",
-    "New Project": "新建项目", "No Project": "无项目", "Quick Start": "快速开始",
+    "New Project": "新建项目", "No Project": "无项目", "No Project found": "未找到项目",
+    "No Projects found": "未找到项目", "Quick Start": "快速开始",
     "Get Started": "开始使用", "Not now": "暂不", "Create a Project": "创建项目",
     "Creating a Project": "创建项目",
     "Projects serve as your workspace where your agents work. Each project has its own file scope and permissions. Get started by creating your first project.": "项目是智能体工作的空间。每个项目都有独立的文件范围和权限。创建第一个项目即可开始使用。",
@@ -891,6 +892,13 @@ DOM_TRANSLATOR_INJECTION = r"""
       }
     } else if (node.nodeType === Node.ELEMENT_NODE) {
       if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE' || node.tagName === 'CODE' || node.tagName === 'PRE') return;
+      // Some empty-state labels split each word into a separate child node.
+      // Translate the known phrase at container level before processing its children.
+      const combinedText = (node.textContent || '').replace(/\s+/g, ' ').trim();
+      if (/^No Projects? found$/i.test(combinedText)) {
+        node.textContent = '未找到项目';
+        return;
+      }
       if (node.placeholder) {
         const translated = translateText(node.placeholder);
         if (translated !== node.placeholder) {
