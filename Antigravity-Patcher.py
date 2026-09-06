@@ -10,7 +10,7 @@ import shutil
 
 import sys
 
-PATCHER_VERSION = "v2.11.0-patcher.4"
+PATCHER_VERSION = "v1.0.1"
 UPDATE_API_URLS = [
     "https://ghfast.top/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
     "https://mirror.ghproxy.com/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
@@ -189,6 +189,12 @@ DOM_TRANSLATOR_INJECTION = r"""
     "New Worktree": "新建工作区树", "New worktree": "新建工作区树",
     "Local": "本地", "local": "本地", "Remote": "远程", "remote": "远程",
     "New Project": "新建项目", "No Project": "无项目", "Quick Start": "快速开始",
+    "Get Started": "开始使用", "Not now": "暂不", "Create a Project": "创建项目",
+    "Creating a Project": "创建项目",
+    "Projects serve as your workspace where your agents work. Each project has its own file scope and permissions. Get started by creating your first project.": "项目是智能体工作的空间。每个项目都有独立的文件范围和权限。创建第一个项目即可开始使用。",
+    "Projects serve as your workspace where your agents work.": "项目是智能体工作的空间。",
+    "Each project has its own file scope and permissions.": "每个项目都有独立的文件范围和权限。",
+    "Get started by creating your first project.": "创建第一个项目即可开始使用。",
     "Project Settings": "项目设置", "Select Environment": "选择环境", "Select Environment (Ctrl+.)": "选择环境 (Ctrl+.)",
     "Select Project": "选择项目", "Select Project Ctrl+;": "选择项目 Ctrl+;", "Select Project (Ctrl+;)": "选择项目 (Ctrl+;)",
     "Select branch": "选择分支", "Cloning GitHub Repository Locally": "正在本地克隆 GitHub 仓库",
@@ -223,6 +229,10 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Execution": "执行", "Agent Settings": "智能体设置", "Agent Behavior": "智能体行为",
     "File Permissions": "文件权限", "Network Permissions": "网络权限",
     "Queued Messages": "排队消息", "Configure when follow-up messages are sent.": "配置发送后续消息的时机。",
+    "Messages sent while the agent is working are queued and delivered when it finishes. Configure in settings.": "智能体工作期间发送的消息会进入队列，并在工作完成后送达。可在设置中进行配置。",
+    "Messages sent while the agent is working are queued and delivered when it finishes.": "智能体工作期间发送的消息会进入队列，并在工作完成后送达。",
+    "Configure in settings.": "可在设置中进行配置。",
+    "settings": "设置",
     "Queue": "排队", "Send Immediately": "立即发送", "Keyboard shortcuts": "键盘快捷键",
     "Security Preset": "安全预设", 
     "Choose a predefined security preset for the agent. This controls terminal auto-execution policy, and file access policy.": "为智能体选择一个预定义的安全预设。这将控制终端自动执行策略和文件访问策略。",
@@ -274,7 +284,7 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Search Engine": "搜索引擎", "Web Search": "网络搜索", "Enable Web Access": "启用网络访问",
     "Startup": "启动", "Launch at login": "登录时自动启动", "Hardware Acceleration": "硬件加速",
     "Current Version": "当前版本", "Up to date": "已是最新版本", "Downloading": "下载中...",
-    "Restart to update": "重启以更新", "Danger Zone": "危险区域", "Clear History": "清除历史记录",
+    "Restart to update": "重启以更新", "Restart to Update": "重启以更新", "Danger Zone": "危险区域", "Clear History": "清除历史记录",
     "Delete Project": "删除项目", "Delete project": "删除项目",
     "Permanently delete": "永久删除", "permanently delete": "永久删除",
     "active conversation": "个进行中的对话", "active conversations": "个进行中的对话",
@@ -631,7 +641,9 @@ DOM_TRANSLATOR_INJECTION = r"""
     ["You can prompt the model to try again", "您可以提示模型重试，或者如果错误仍然存在，可以开启新的对话。"],
     ["for more help", " 以获取更多帮助。"],
     ["See our", "查看我们的 "],
-    ["By using this app, you agree to its", "使用本应用即表示您同意其"]
+    ["By using this app, you agree to its", "使用本应用即表示您同意其"],
+    ["Messages sent while the agent is working are", "智能体工作期间发送的消息会进入队列，并在工作完成后送达。可在设置中进行配置。"],
+    ["Projects serve as your workspace where your agents", "项目是智能体工作的空间。每个项目都有独立的文件范围和权限。创建第一个项目即可开始使用。"]
   ];
 
   function translateText(text) {
