@@ -229,6 +229,7 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Terms of Service": "服务条款",
     "Configure agent execution, queued message delivery, and permissions.": "配置智能体执行、排队消息发送以及权限。",
     "Execution": "执行", "Agent Settings": "智能体设置", "Agent Behavior": "智能体行为",
+    "Controls the actions the agent can take.": "控制智能体可以执行的操作。",
     "File Permissions": "文件权限", "Network Permissions": "网络权限",
     "Queued Messages": "排队消息", "Configure when follow-up messages are sent.": "配置发送后续消息的时机。",
     "Messages sent while the agent is working are queued and delivered when it finishes. Configure in settings.": "智能体工作期间发送的消息会进入队列，并在工作完成后送达。可在设置中进行配置。",
@@ -592,6 +593,7 @@ DOM_TRANSLATOR_INJECTION = r"""
     ["Search your Google Cloud projects using natural language", "使用自然语言搜索您的 Google Cloud 项目。"],
 
     ["Manage Antigravity app settings", "管理 Antigravity 应用设置。"],
+    ["Controls the actions the agent can take", "控制智能体可以执行的操作。"],
     ["Install Antigravity IDE to run and edit your workspace scripts", "安装 Antigravity IDE 以运行和编辑工作区脚本。"],
     ["Browser settings have moved to the Browser section of General settings", "浏览器设置已移至常规设置的浏览器部分。"],
     ["Whether the agent asks you to review its documents", "控制智能体是否请求您审阅其文档。"],
