@@ -10,7 +10,7 @@ import time
 
 import sys
 
-PATCHER_VERSION = "v1.0.8"
+PATCHER_VERSION = "v1.0.9"
 UPDATE_API_URLS = [
     "https://ghfast.top/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
     "https://mirror.ghproxy.com/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
@@ -190,6 +190,9 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Welcome to Antigravity": "欢迎使用 Antigravity", "Sign in": "登录",
     "Awaiting Authentication...": "等待身份验证...", "Awaiting Authentication…": "等待身份验证…",
     "Use business account": "使用企业帐户", "Having trouble? Let us know": "遇到问题？请告诉我们",
+    "Sorry, this account is ineligible to use Antigravity": "抱歉，此帐户无法使用 Antigravity",
+    "Your current account is not eligible for Antigravity, because it is not currently available in your location. Learn more by visiting our FAQ.": "您当前的帐户无法使用 Antigravity，因为该服务目前尚未在您所在的地区提供。请访问我们的常见问题了解更多信息。",
+    "Continue with different account": "使用其他帐户继续",
     "Previous": "上一步", "Next": "下一步",
     "Monthly Limit": "每月限额", "Weekly Limit": "每周限额", "Five Hour Limit": "五小时限额",
     "Weekly Limit Remaining": "每周限额剩余", "Five Hour Limit Remaining": "五小时限额剩余",
