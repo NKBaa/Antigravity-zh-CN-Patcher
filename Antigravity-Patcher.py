@@ -10,7 +10,7 @@ import time
 
 import sys
 
-PATCHER_VERSION = "v1.0.11"
+PATCHER_VERSION = "v1.0.12"
 UPDATE_API_URLS = [
     "https://ghfast.top/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
     "https://mirror.ghproxy.com/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
@@ -998,6 +998,14 @@ DOM_TRANSLATOR_INJECTION = r"""
       // Some empty-state labels split each word into a separate child node.
       // Translate the known phrase at container level before processing its children.
       const combinedText = (node.textContent || '').replace(/\s+/g, ' ').trim();
+      if (combinedText === 'Welcome to Antigravity') {
+        node.textContent = '欢迎使用 Antigravity';
+        return;
+      }
+      if (combinedText === 'Sorry, this account is ineligible to use Antigravity') {
+        node.textContent = '抱歉，此帐户无法使用 Antigravity';
+        return;
+      }
       if (/^No Projects? found$/i.test(combinedText)) {
         node.textContent = '暂无项目';
         node.style.fontSize = '14px';
