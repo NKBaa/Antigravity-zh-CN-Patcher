@@ -10,7 +10,7 @@ import time
 
 import sys
 
-PATCHER_VERSION = "v1.0.10"
+PATCHER_VERSION = "v1.0.11"
 UPDATE_API_URLS = [
     "https://ghfast.top/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
     "https://mirror.ghproxy.com/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
@@ -192,7 +192,7 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Use business account": "使用企业帐户", "Having trouble? Let us know": "遇到问题？请告诉我们",
     "Sorry, this account is ineligible to use Antigravity": "抱歉，此帐户无法使用 Antigravity",
     "Your current account is not eligible for Antigravity, because it is not currently available in your location. Learn more by visiting our FAQ.": "您当前的帐户无法使用 Antigravity，因为该服务目前尚未在您所在的地区提供。请访问我们的常见问题了解更多信息。",
-    "Continue with different account": "使用其他帐户继续",
+    "Continue with different account": "使用其他帐户继续", "FAQ": "常见问题",
     "Continue with Google": "使用 Google 继续", "Continue with Google Cloud": "使用 Google Cloud 继续",
     "Sign in with business account": "使用企业帐户登录", "Use advanced SSO config": "使用高级 SSO 配置",
     "Use this option if your administrator has provided you with advanced login configurations": "如果管理员为您提供了高级登录配置，请使用此选项",
@@ -761,6 +761,11 @@ DOM_TRANSLATOR_INJECTION = r"""
     // Tooltips may render the label and shortcut as separate text nodes.
     text = text.replace(/\bSelect\s+Environment\b/g, '选择环境');
     text = text.replace(/\bSelect\s+Project\b/g, '选择项目');
+    text = text.replace(/Welcome to Antigravity/g, '欢迎使用 Antigravity');
+    text = text.replace(/Sorry, this account is ineligible to use Antigravity/g, '抱歉，此帐户无法使用 Antigravity');
+    text = text.replace(/Your current account is not eligible for Antigravity, because it is not currently available in your location\.?/g, '您当前的帐户无法使用 Antigravity，因为该服务目前尚未在您所在的地区提供。');
+    text = text.replace(/Learn more by visiting our/g, '请访问我们的');
+    text = text.replace(/\bFAQ\b/g, '常见问题');
     trimmed = text.trim();
 
     if (dictionary[trimmed]) {
