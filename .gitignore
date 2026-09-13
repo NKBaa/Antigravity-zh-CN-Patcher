@@ -1,51 +1,53 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# Virtual Environment
-venv/
-ENV/
-env/
-.venv
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.DS_Store
-
 # Logs
+logs
+.logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# OS
-Thumbs.db
+node_modules
+dist-ssr
+*.local
+.vite
+dist
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
-desktop.ini
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# Backup files
-*.bak
-*.backup
-*.tmp
+# Build output
+src-tauri/target/
+src-tauri/gen/
+src-tauri/.env
+
+# Environment
+.env
+.env.*
+environment/
+
+# Python virtual environments and test files
+.venv*/
+venv/
+# *.py
+__pycache__/
+*.pyc
+
+# Reference projects (for development only)
+
+# Temporary quota probing scripts & dumps (one-off debugging artifacts)
+scripts/_*.json
+scripts/dump_quota_raw.py
+scripts/dump_full.py
+scripts/probe_weekly.py
+scripts/probe_quota_summary.pyDOCKER_DEPLOYMENT.md
+pnpm-lock.yaml
