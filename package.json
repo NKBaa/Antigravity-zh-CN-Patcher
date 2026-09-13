@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "name": "antigravity-tools",
+  "description": "Antigravity Patcher - 汉化与单应用代理工具",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite --configLoader runner",
+    "build": "tsc && vite build --configLoader runner",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "tauri:debug": "RUST_LOG=debug npm run tauri dev"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-process": "^2.3.1",
+    "@tauri-apps/plugin-updater": "^2.9.0",
+    "daisyui": "^5.5.13",
+    "i18next": "^25.7.2",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "lucide-react": "^0.561.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-i18next": "^16.5.0",
+    "react-router-dom": "^7.10.1",
+    "zustand": "^5.0.9"
+  },
+  "devDependencies": {
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tauri-apps/cli": "^2",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.6.0",
+    "autoprefixer": "^10.4.22",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.19",
+    "typescript": "~5.8.3",
+    "vite": "^7.0.4"
+  }
+}
