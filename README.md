@@ -32,8 +32,6 @@
 | 后台体验 | 可能出现黑框 | 🤫 隐藏控制台、静默启动、关闭后最小化 |
 | 更新方式 | 手动下载替换 | 🔄 应用内检查、安装并清理安装包 |
 
-同时移除了账户、配额、API 代理池、监控、安全管理、Docker/部署脚本和 MiniView 等与本工具目标无关的旧模块。🧹
-
 ## 🎨 UI 参考
 
 UI 参考项目：[lbjlaq/Antigravity-Manager](https://github.com/lbjlaq/Antigravity-Manager)。本项目仅参考其整体视觉语言、导航布局和深色界面方向，功能与代码结构均已围绕 Patcher 重新设计，不依赖原项目的管理功能。🎯
