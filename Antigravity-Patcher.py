@@ -542,7 +542,7 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Inherit General": "继承全局设置", "Local Permissions": "本地权限",
     "Also includes": "还包括", "global settings": "全局设置",
     "when working in this project.": "（当在此项目中工作时）。",
-    "Toggle Sidebar": "切换侧边栏", "View Split Diff": "分屏查看差异", "Collapse All": "全部折叠",
+    "Toggle Sidebar": "切换侧边栏", "View Split Diff": "分屏查看差异", "Open Diff": "打开差异", "Collapse All": "全部折叠",
     "Learn more about": "了解更多关于",
     "Configure the agent's visual theme and display preferences.": "配置智能体的视觉主题和显示偏好。",
     "Chat Settings": "聊天设置", "Verbose Agent Chat": "详细的智能体对话",
@@ -806,6 +806,12 @@ DOM_TRANSLATOR_INJECTION = r"""
     }
     if ((m = trimmed.match(/^Editing (.+) \+(\d+) -(\d+)$/))) {
       return text.replace(trimmed, "正在编辑 " + m[1] + " +" + m[2] + " -" + m[3]);
+    }
+    if ((m = trimmed.match(/^Run (.+) finished$/i))) {
+      return text.replace(trimmed, "运行 " + m[1] + " 完成");
+    }
+    if ((m = trimmed.match(/^Ran (\d+) commands?$/i))) {
+      return text.replace(trimmed, "已运行 " + m[1] + " 个命令");
     }
     if (trimmed === "Waiting for user input") {
       return text.replace(trimmed, "等待用户输入");
