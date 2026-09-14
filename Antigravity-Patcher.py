@@ -185,7 +185,9 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Your quota for this model is running low": "您对此模型的配额即将用尽",
     "Memory": "记忆", "Tools": "工具", "Agents": "智能体",
     "Overview": "概览", "Logs": "日志", "Clear": "清除", "Save": "保存",
-    "Cancel": "取消", "Submit": "提交", "Run": "运行", "Stop": "停止",
+    "Cancel": "取消", "Submit": "提交", "Submit (Enter)": "提交（Enter）", "Run": "运行", "Stop": "停止",
+    "Skip (esc), Skip All (Ctrl+esc)": "跳过（Esc），全部跳过（Ctrl+Esc）",
+    "Skip (Esc), Skip All (Ctrl+Esc)": "跳过（Esc），全部跳过（Ctrl+Esc）",
     "Edit": "编辑", "Delete": "删除", "Add": "添加", "Remove": "移除", "Download": "下载",
     "Hello": "你好", "Hello!": "你好！",
     "Welcome to Antigravity": "欢迎使用 Antigravity", "Sign in": "登录",
@@ -220,6 +222,7 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Files Changed": "已修改文件", "No subagents": "无子智能体", "No file changes": "无文件修改",
     "No artifacts generated": "未生成工件", "Uploads": "上传项", "Background Tasks": "后台任务",
     "No background tasks": "无后台任务", "Background Task Output": "后台任务输出", "Task not found": "未找到任务",
+    "1 task running": "正在运行 1 个任务",
     "Terminals": "终端", "No active terminals": "无活动终端",
     "See less": "收起", "See Less": "收起", "See more": "查看更多", "See More": "查看更多",
     "Standalone Terminals": "独立终端",
@@ -775,6 +778,21 @@ DOM_TRANSLATOR_INJECTION = r"""
     
     // Dynamic Regex Translations
     let m;
+    if ((m = trimmed.match(/^(\d+) task(?:s)? running$/i))) {
+      return text.replace(trimmed, "正在运行 " + m[1] + " 个任务");
+    }
+    if ((m = trimmed.match(/^Allow running (.+)\?$/i))) {
+      return text.replace(trimmed, "是否允许运行 " + m[1] + "？");
+    }
+    if ((m = trimmed.match(/^Yes, and always allow '(.+)' in this conversation$/i))) {
+      return text.replace(trimmed, "是，在本次对话中始终允许：" + m[1]);
+    }
+    if ((m = trimmed.match(/^Yes, and always allow '(.+)' in this project$/i))) {
+      return text.replace(trimmed, "是，在此项目中始终允许：" + m[1]);
+    }
+    if ((m = trimmed.match(/^Yes, and always allow '(.+)'$/i))) {
+      return text.replace(trimmed, "是，始终允许：" + m[1]);
+    }
     if (text.indexOf("of the customization budget is available") !== -1) {
       text = text.replace(/(\d+(?:\.\d+)?)% of the customization budget is available\.?/g, "自定义项预算可用额度为 $1%。");
       text = text.replace(/%\s*of the customization budget is available\.?/g, "% 的自定义项预算可用额度。");
