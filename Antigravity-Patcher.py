@@ -10,7 +10,7 @@ import time
 
 import sys
 
-PATCHER_VERSION = "v2.0"
+PATCHER_VERSION = "v2.1"
 UPDATE_API_URLS = [
     "https://ghfast.top/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
     "https://mirror.ghproxy.com/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",

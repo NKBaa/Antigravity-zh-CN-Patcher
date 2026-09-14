@@ -1,6 +1,6 @@
 [package]
 name = "antigravity-tools"
-version = "2.0.0"
+version = "2.1.0"
 description = "Antigravity Patcher - 汉化与单应用代理工具"
 authors = ["you"]
 license = "CC-BY-NC-SA-4.0"

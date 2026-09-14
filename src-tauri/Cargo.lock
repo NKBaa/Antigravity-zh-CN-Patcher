@@ -96,7 +96,7 @@ checksum = "34fde25430d87a9388dadbe6e34d7f72a462c8b43ac8d309b42b0a8505d7e2a5"
 
 [[package]]
 name = "antigravity-tools"
-version = "2.0.0"
+version = "2.1.0"
 dependencies = [
  "aes-gcm",
  "anyhow",

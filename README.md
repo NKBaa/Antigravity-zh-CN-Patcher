@@ -4,7 +4,7 @@
 
 项目从早期的“只执行汉化的脚本工具”重写为 **Tauri + React + Rust** 桌面应用，保持操作简单、流量链路短、配置本地保存，并且全程不弹黑色命令行窗口。✨
 
-当前版本：[v2.0](https://github.com/NKBaa/Antigravity-zh-CN-Patcher/releases/tag/v2.0) 📦
+当前版本：[v2.1](https://github.com/NKBaa/Antigravity-zh-CN-Patcher/releases/tag/v2.1) 📦
 
 ## ✨ 核心功能
 
