@@ -4,11 +4,11 @@ use serde::{Deserialize, Serialize};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 const GITHUB_API_URL: &str =
-    "https://api.github.com/repos/lbjlaq/Antigravity-Manager/releases/latest";
+    "https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest";
 const GITHUB_RAW_URL: &str =
-    "https://raw.githubusercontent.com/lbjlaq/Antigravity-Manager/main/package.json";
+    "https://raw.githubusercontent.com/NKBaa/Antigravity-zh-CN-Patcher/main/package.json";
 const JSDELIVR_URL: &str =
-    "https://cdn.jsdelivr.net/gh/lbjlaq/Antigravity-Manager@main/package.json";
+    "https://cdn.jsdelivr.net/gh/NKBaa/Antigravity-zh-CN-Patcher@main/package.json";
 const CURRENT_VERSION: &str = env!("CARGO_PKG_VERSION");
 const DEFAULT_CHECK_INTERVAL_HOURS: u64 = 24;
 const UPDATE_TEMP_CLEANUP_AGE: Duration = Duration::from_secs(10 * 60);
@@ -57,7 +57,7 @@ struct GitHubRelease {
 }
 
 const UPDATER_JSON_URL: &str =
-    "https://github.com/lbjlaq/Antigravity-Manager/releases/latest/download/updater.json";
+    "https://github.com/NKBaa/Antigravity-zh-CN-Patcher/releases/latest/download/updater.json";
 
 /// Check for updates with improved strategy:
 /// 1. Check updater.json (Source of Truth for Auto-Update)
@@ -168,7 +168,7 @@ async fn check_updater_json() -> Result<UpdateInfo, String> {
     }
 
     let download_url = format!(
-        "https://github.com/lbjlaq/Antigravity-Manager/releases/tag/v{}",
+        "https://github.com/NKBaa/Antigravity-zh-CN-Patcher/releases/tag/v{}",
         latest_version
     );
 
@@ -311,7 +311,7 @@ async fn check_static_url(url: &str, source_name: &str) -> Result<UpdateInfo, St
     }
 
     // fallback sources generally don't provide release notes or download specific URL, construct generic
-    let download_url = "https://github.com/lbjlaq/Antigravity-Manager/releases/latest".to_string();
+    let download_url = "https://github.com/NKBaa/Antigravity-zh-CN-Patcher/releases/latest".to_string();
     let release_notes = format!(
         "New version detected via {}. Please check release page for details.",
         source_name
