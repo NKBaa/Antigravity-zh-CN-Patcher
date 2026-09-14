@@ -10,7 +10,7 @@ import time
 
 import sys
 
-PATCHER_VERSION = "v2.1.1"
+PATCHER_VERSION = "v2.1.2"
 UPDATE_API_URLS = [
     "https://ghfast.top/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
     "https://mirror.ghproxy.com/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
@@ -185,7 +185,7 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Your quota for this model is running low": "您对此模型的配额即将用尽",
     "Memory": "记忆", "Tools": "工具", "Agents": "智能体",
     "Overview": "概览", "Logs": "日志", "Clear": "清除", "Save": "保存",
-    "Cancel": "取消", "Submit": "提交", "Submit (Enter)": "提交（Enter）", "Run": "运行", "Stop": "停止",
+    "Cancel": "取消", "Cancel (Ctrl+D)": "取消（Ctrl+D）", "Submit": "提交", "Submit (Enter)": "提交（Enter）", "Run": "运行", "Stop": "停止",
     "Skip (esc), Skip All (Ctrl+esc)": "跳过（Esc），全部跳过（Ctrl+Esc）",
     "Skip (Esc), Skip All (Ctrl+Esc)": "跳过（Esc），全部跳过（Ctrl+Esc）",
     "Edit": "编辑", "Delete": "删除", "Add": "添加", "Remove": "移除", "Download": "下载",
@@ -770,6 +770,9 @@ DOM_TRANSLATOR_INJECTION = r"""
     text = text.replace(/Your current account is not eligible for Antigravity, because it is not currently available in your location\.?/g, '您当前的帐户无法使用 Antigravity，因为该服务目前尚未在您所在的地区提供。');
     text = text.replace(/Learn more by visiting our/g, '请访问我们的');
     text = text.replace(/\bFAQ\b/g, '常见问题');
+    text = text.replace(/Cancel\s*\(\s*Ctrl\+D\s*\)/gi, '取消（Ctrl+D）');
+    text = text.replace(/Submit\s*\(\s*Enter\s*\)/gi, '提交（Enter）');
+    text = text.replace(/Skip\s*\(\s*esc\s*\)\s*,\s*Skip All\s*\(\s*Ctrl\+esc\s*\)/gi, '跳过（Esc），全部跳过（Ctrl+Esc）');
     trimmed = text.trim();
 
     if (dictionary[trimmed]) {
@@ -783,6 +786,9 @@ DOM_TRANSLATOR_INJECTION = r"""
     }
     if ((m = trimmed.match(/^Allow running (.+)\?$/i))) {
       return text.replace(trimmed, "是否允许运行 " + m[1] + "？");
+    }
+    if ((m = trimmed.match(/^Allow (.+) run\?$/i))) {
+      return text.replace(trimmed, "是否允许 " + m[1] + " 运行？");
     }
     if ((m = trimmed.match(/^Yes, and always allow '(.+)' in this conversation$/i))) {
       return text.replace(trimmed, "是，在本次对话中始终允许：" + m[1]);
