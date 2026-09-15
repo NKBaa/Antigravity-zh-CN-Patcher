@@ -817,6 +817,17 @@ pub async fn open_data_folder() -> Result<(), String> {
     Ok(())
 }
 
+/// 打开当前版本下载页，作为未配置签名更新包时的安全兜底。
+#[tauri::command]
+pub async fn open_update_download(app: tauri::AppHandle) -> Result<(), String> {
+    app.opener()
+        .open_url(
+            "https://github.com/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
+            None::<&str>,
+        )
+        .map_err(|e| format!("打开更新下载页失败: {}", e))
+}
+
 /// 获取数据目录绝对路径
 #[tauri::command]
 pub async fn get_data_dir_path() -> Result<String, String> {

@@ -580,6 +580,7 @@ pub fn run() {
             commands::get_antigravity_cli_path,
             commands::get_antigravity_args,
             commands::check_for_updates,
+            commands::open_update_download,
             commands::get_update_settings,
             commands::save_update_settings,
             commands::should_check_updates,
