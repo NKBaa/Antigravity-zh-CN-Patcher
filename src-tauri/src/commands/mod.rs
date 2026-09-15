@@ -841,6 +841,14 @@ pub async fn show_main_window(window: tauri::Window) -> Result<(), String> {
     window.show().map_err(|e| e.to_string())
 }
 
+/// 判断是否应以静默模式启动（开机自启会传入 --minimized）。
+#[tauri::command]
+pub async fn should_start_minimized() -> Result<bool, String> {
+    let has_minimized_arg = std::env::args().any(|arg| arg == "--minimized");
+    let config = modules::load_app_config()?;
+    Ok(has_minimized_arg && config.silent_start)
+}
+
 /// 设置窗口主题（用于同步 Windows 标题栏按钮颜色）
 #[tauri::command]
 pub async fn set_window_theme(window: tauri::Window, theme: String) -> Result<(), String> {

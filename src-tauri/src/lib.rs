@@ -575,6 +575,7 @@ pub fn run() {
             commands::load_config,
             commands::save_config,
             commands::show_main_window,
+            commands::should_start_minimized,
             commands::set_window_theme,
             commands::get_antigravity_path,
             commands::get_antigravity_cli_path,

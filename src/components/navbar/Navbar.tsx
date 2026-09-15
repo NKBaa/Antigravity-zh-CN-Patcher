@@ -14,20 +14,21 @@ function TargetActions() {
         window.dispatchEvent(new CustomEvent(`antigravity:${action}-target`));
     };
 
-    const buttonClass = 'h-9 whitespace-nowrap px-3 gap-2 rounded-xl border border-slate-300 dark:border-slate-600/70 bg-transparent text-slate-700 dark:text-slate-200 shadow-none hover:bg-slate-100 dark:hover:bg-slate-800/70 hover:shadow-none focus:shadow-none';
+    // Keep both target actions comfortably tappable while preserving the compact navbar.
+    const buttonClass = 'h-11 min-h-11 whitespace-nowrap px-5 gap-2.5 rounded-xl border border-slate-300 dark:border-slate-600/70 bg-transparent text-slate-700 dark:text-slate-200 shadow-none hover:bg-slate-100 dark:hover:bg-slate-800/70 hover:shadow-none focus:shadow-none touch-manipulation';
     const iconClass = 'shrink-0';
     return (
         <div className="flex items-center gap-2">
-            <button className={`btn btn-ghost btn-sm hidden min-[480px]:inline-flex ${buttonClass}`} onClick={() => emit('launch')} title={launchLabel}>
+            <button className={`btn btn-ghost btn-sm hidden min-[480px]:inline-flex ${buttonClass}`} onClick={() => emit('launch')} title={launchLabel} aria-label={launchLabel}>
                 <Rocket size={17} strokeWidth={1.8} className={iconClass} />{launchLabel}
             </button>
-            <button className={`btn btn-ghost btn-sm hidden min-[480px]:inline-flex ${buttonClass}`} onClick={() => emit('restart')} title={restartLabel}>
+            <button className={`btn btn-ghost btn-sm hidden min-[480px]:inline-flex ${buttonClass}`} onClick={() => emit('restart')} title={restartLabel} aria-label={restartLabel}>
                 <RotateCw size={17} strokeWidth={1.8} className={iconClass} />{restartLabel}
             </button>
-            <button className="btn btn-ghost btn-sm inline-flex min-[480px]:hidden h-9 w-9 rounded-xl border border-slate-300 p-0 text-slate-700 shadow-none dark:border-slate-600/70 dark:text-slate-200" onClick={() => emit('launch')} title={launchLabel} aria-label={launchLabel}>
+            <button className="btn btn-ghost btn-sm inline-flex min-[480px]:hidden h-11 w-11 min-h-11 min-w-11 rounded-xl border border-slate-300 p-0 text-slate-700 shadow-none dark:border-slate-600/70 dark:text-slate-200 touch-manipulation" onClick={() => emit('launch')} title={launchLabel} aria-label={launchLabel}>
                 <Rocket size={17} strokeWidth={1.8} />
             </button>
-            <button className="btn btn-ghost btn-sm inline-flex min-[480px]:hidden h-9 w-9 rounded-xl border border-slate-300 p-0 text-slate-700 shadow-none dark:border-slate-600/70 dark:text-slate-200" onClick={() => emit('restart')} title={restartLabel} aria-label={restartLabel}>
+            <button className="btn btn-ghost btn-sm inline-flex min-[480px]:hidden h-11 w-11 min-h-11 min-w-11 rounded-xl border border-slate-300 p-0 text-slate-700 shadow-none dark:border-slate-600/70 dark:text-slate-200 touch-manipulation" onClick={() => emit('restart')} title={restartLabel} aria-label={restartLabel}>
                 <RotateCw size={17} strokeWidth={1.8} />
             </button>
         </div>

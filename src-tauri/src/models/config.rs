@@ -20,6 +20,8 @@ pub struct AppConfig {
     pub antigravity_args: Option<Vec<String>>,      // [NEW] Antigravity startup arguments
     #[serde(default)]
     pub auto_launch: bool,     // Launch on startup
+    #[serde(default = "default_silent_start")]
+    pub silent_start: bool,    // Start hidden when launched by autostart
     #[serde(default)]
     pub scheduled_warmup: ScheduledWarmupConfig, // [NEW] Scheduled warmup configuration
     #[serde(default)]
@@ -32,6 +34,10 @@ pub struct AppConfig {
     pub hidden_menu_items: Vec<String>, // Hidden menu item path list
     #[serde(default)]
     pub cloudflared: CloudflaredConfig, // [NEW] Cloudflared configuration
+}
+
+fn default_silent_start() -> bool {
+    true
 }
 
 /// Scheduled warmup configuration
@@ -195,6 +201,7 @@ impl AppConfig {
             antigravity_cli_executable: None,
             antigravity_args: None,
             auto_launch: false,
+            silent_start: true,
             scheduled_warmup: ScheduledWarmupConfig::default(),
             quota_protection: QuotaProtectionConfig::default(),
             pinned_quota_models: PinnedQuotaModelsConfig::default(),

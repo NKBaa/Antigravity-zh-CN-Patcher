@@ -6,6 +6,7 @@ import { showToast } from '../components/common/ToastContainer';
 import { check as tauriCheck } from '@tauri-apps/plugin-updater';
 import { relaunch as tauriRelaunch } from '@tauri-apps/plugin-process';
 import { isTauri } from '../utils/env';
+import { useConfigStore } from '../stores/useConfigStore';
 
 type Installation = { path: string; executable?: string; resources: string };
 type UpdateInfo = { has_update: boolean; latest_version: string; current_version: string; release_notes?: string; download_url?: string };
@@ -54,6 +55,7 @@ const PAGE_COPY = {
 
 const Localization = () => {
     const { i18n } = useTranslation();
+    const { config, saveConfig } = useConfigStore();
     const languageKey = (i18n.resolvedLanguage || i18n.language || 'en') as keyof typeof PAGE_COPY;
     const c = PAGE_COPY[languageKey] || PAGE_COPY.en;
     const [installation, setInstallation] = useState<Installation | null>(null);
@@ -64,7 +66,7 @@ const Localization = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [proxyDir, setProxyDir] = useState('');
-    const [proxyEnabled, setProxyEnabled] = useState(true);
+    const [proxyEnabled, setProxyEnabled] = useState(false);
     const [proxyCheckState, setProxyCheckState] = useState<'idle' | 'checking' | 'success' | 'error'>('idle');
     const [proxyCheckMessage, setProxyCheckMessage] = useState('');
     const [busy, setBusy] = useState(false);
@@ -79,11 +81,12 @@ const Localization = () => {
 
     useEffect(() => {
         invoke<boolean>('is_auto_launch_enabled').then(setAutoStart).catch(() => {});
-        setSilentStart(localStorage.getItem('ag.silentStart') !== 'false');
+        const storedSilentStart = localStorage.getItem('ag.silentStart') !== 'false';
+        setSilentStart(config?.silent_start ?? storedSilentStart);
         setMinimizeOnClose(localStorage.getItem('ag.minimizeOnClose') !== 'false');
         setProxyOnlyWhileOpen(localStorage.getItem('ag.proxyOnlyWhileOpen') !== 'false');
-        setProxyEnabled(localStorage.getItem('ag.proxyEnabled') !== 'false');
-    }, []);
+        setProxyEnabled(localStorage.getItem('ag.proxyEnabled') === 'true');
+    }, [config]);
 
     useEffect(() => {
         let cancelled = false;
@@ -108,6 +111,14 @@ const Localization = () => {
         localStorage.setItem(`ag.${key}`, String(value));
         if (key === 'autoStart') {
             try { await invoke('toggle_auto_launch', { enable: value }); } catch (e) { showToast(String(e), 'error'); setAutoStart(!value); }
+        }
+        if (key === 'silentStart' && config) {
+            try {
+                await saveConfig({ ...config, silent_start: value }, true);
+            } catch (e) {
+                showToast(String(e), 'error');
+                setSilentStart(!value);
+            }
         }
     };
 
@@ -205,7 +216,10 @@ const Localization = () => {
         setBusy(true);
         try {
             await invoke(command);
-            showToast(command === 'localization_apply' ? '汉化已应用，重启 Antigravity 后生效' : '已取消汉化并恢复原版', 'success');
+            // The patcher no longer launches the app itself. Restart through the
+            // manager so the saved process-level proxy is applied in the same step.
+            await invoke('localization_restart', { target, proxyDir });
+            showToast(command === 'localization_apply' ? '汉化已应用，目标程序已按代理配置重启' : '已取消汉化并恢复原版，目标程序已重启', 'success');
         } catch (error) {
             showToast(String(error), 'error', 6000);
         } finally {

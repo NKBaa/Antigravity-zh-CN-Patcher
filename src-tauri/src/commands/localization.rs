@@ -146,6 +146,7 @@ fn run_patcher(action: &str, app: Option<&AppHandle>) -> Result<String, String> 
         cmd
     };
     command
+        .env("ANTIGRAVITY_PATCHER_MANAGED", "1")
         .stdin(Stdio::null())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped());
@@ -252,7 +253,8 @@ pub async fn localization_load_proxy(
     let port = proxy.get("port").and_then(|value| value.as_u64()).unwrap_or(0) as u16;
     if host.is_empty() || port == 0 { return Ok(None); }
     Ok(Some(SavedProxy {
-        enabled: config.get("enabled").and_then(|value| value.as_bool()).or_else(|| proxy.get("enabled").and_then(|value| value.as_bool())).unwrap_or(true),
+        // Missing enabled flags are treated as disabled for a fresh install.
+        enabled: config.get("enabled").and_then(|value| value.as_bool()).or_else(|| proxy.get("enabled").and_then(|value| value.as_bool())).unwrap_or(false),
         host,
         port,
         proxy_type: proxy.get("type").and_then(|value| value.as_str()).unwrap_or("socks5").to_string(),

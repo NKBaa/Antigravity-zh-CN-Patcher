@@ -10,7 +10,7 @@ import time
 
 import sys
 
-PATCHER_VERSION = "v2.1.3"
+PATCHER_VERSION = "v2.1.4"
 UPDATE_API_URLS = [
     "https://ghfast.top/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
     "https://mirror.ghproxy.com/https://api.github.com/repos/NKBaa/Antigravity-zh-CN-Patcher/releases/latest",
@@ -389,7 +389,9 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Default Model": "默认模型", "Temperature": "温度", "System Prompt": "系统提示词",
     "Search Engine": "搜索引擎", "Web Search": "网络搜索", "Enable Web Access": "启用网络访问",
     "Startup": "启动", "Launch at login": "登录时自动启动", "Hardware Acceleration": "硬件加速",
-    "Current Version": "当前版本", "App version": "应用版本", "Up to date": "已是最新版本", "Downloading": "下载中...",
+    "Current Version": "当前版本", "App version": "应用版本", "Up to date": "已是最新版本",
+    "Downloading": "下载中...", "Downloading Update": "正在下载更新", "Downloading update": "正在下载更新",
+    "Downloading Update...": "正在下载更新...", "Downloading update...": "正在下载更新...",
     "Restart to update": "重启以更新", "Restart to Update": "重启以更新", "Danger Zone": "危险区域", "Clear History": "清除历史记录",
     "Delete Project": "删除项目", "Delete project": "删除项目",
     "Permanently delete": "永久删除", "permanently delete": "永久删除",
@@ -1209,9 +1211,11 @@ def apply_patch():
     print("==================================================================")
     print("                                                                ")
     print("[执行] 正在为您关闭 Antigravity 程序...")
-    if sys.platform == "win32":
+    # When launched by the Tauri manager, it performs the final restart so the
+    # process-level proxy arguments are not bypassed by a direct executable launch.
+    if os.environ.get("ANTIGRAVITY_PATCHER_MANAGED") != "1" and sys.platform == "win32":
         os.system("taskkill /F /IM Antigravity.exe >nul 2>&1")
-    elif sys.platform == "darwin":
+    elif os.environ.get("ANTIGRAVITY_PATCHER_MANAGED") != "1" and sys.platform == "darwin":
         os.system("pkill -f Antigravity >/dev/null 2>&1")
 
     # 1. 确保 unpacked app 文件夹存在
